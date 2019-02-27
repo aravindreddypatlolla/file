@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<script src="angular.js"></script>
+<link href="style.css" type="text/css" rel="stylesheet"/>
+<body>
+
+<div ng-app="myApp" ng-controller="customersCtrl"> 
+    
+<div class="fgrid">  
+    <div class="fheader">
+        <label>Work Type</label>
+        <select ng-model="worktypeSelected" ng-options="x for x in worktype" ng-change="worktypeChanged()">
+
+        </select>
+    </div>
+    <p class="ferror" ng-if="ferror">All fields are mandatory</p>
+    <div class="f-repeat"  ng-repeat="x in record track by $index">
+        <table class="f-table">
+            <tr>
+                <td>
+                    <div class="field">
+                        <label> Bert:</label>
+                        <input type="text" ng-model="x.bert"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> CIID:</label>
+                        <input type="text" ng-model="x.ciid"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> CLO:</label>
+                        <input type="text" ng-model="x.clo"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> Interface Type:</label>
+                        <select ng-model="x.itypeslected" ng-options="y for y in x.itype">
+                        </select>
+                    </div>
+                </td>
+            </tr> 
+        </table>
+        <table class="f-table">   
+            <tr>
+                <td>
+                    <div class="field">
+                        <label> A Side Router A</label>
+                        <input type="text" ng-model="x.asideroutera"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label>physical interface a</label>
+                        <input type="text" ng-model="x.physicalinterfacea"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> logical interfface a</label>
+                        <input type="text" ng-model="x.logicalinterffacea"/>
+                    </div>
+                </td>            
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <label> z side router z</label>
+                        <input type="text" ng-model="x.zsiderouterz"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> physical interface z</label>
+                        <input type="text" ng-model="x.physicalinterfacez"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <label> logical interfface z</label>
+                        <input type="text" ng-model="x.logicalinterffacez"/>
+                    </div>
+                </td>            
+        </tr>
+                
+        </table>
+    </div>
+    <button class="f-submit" ng-click="fsubmit()">Submit</button>
+    <button class="f-submit" ng-click="fdelete()">Delete</button>
+    <button class="f-submit" ng-click="fadd()">Add</button>
+</div>
+<script>
+var app = angular.module('myApp', []);
+app.controller('customersCtrl', function($scope, $http) {
+    $scope.ferror=false;
+    $scope.emptyRecord= { 
+            bert:'',
+            ciid:'',
+            clo:'',
+            itypeslected:'',
+            itype:[
+                "Circuit Bundle",
+                "Circuit Upgrade",
+                "Circuit Migration",
+                "Rearrangement",
+                "No Submission",
+            ],
+            asideroutera:'',
+            physicalinterfacea:'',
+            logicalinterffacea:'',
+            zsiderouterz:'',
+            physicalinterfacez:'',
+            logicalinterffacez:'',        
+        };
+    $scope.worktype=[
+        "Circuit Bundle",
+        "Circuit Upgrade",
+        "Circuit Migration",
+        "Rearrangement",
+        "No Submission",
+    ]
+    $scope.record =[
+        { 
+            bert:'',
+            ciid:'',
+            clo:'',
+            itypeslected:'',
+            itype:[
+                "Circuit Bundle",
+                "Circuit Upgrade",
+                "Circuit Migration",
+                "Rearrangement",
+                "No Submission",
+            ],
+            asideroutera:'',
+            physicalinterfacea:'',
+            logicalinterffacea:'',
+            zsiderouterz:'',
+            physicalinterfacez:'',
+            logicalinterffacez:'',        
+        }
+    ]
+    $scope.length = $scope.record.length;
+    $scope.worktypeChanged = function(){
+        console.log($scope.worktypeSelected);
+        $scope.record.forEach(function(e){
+            e.itypeslected = $scope.worktypeSelected;
+        })
+    }
+    $scope.fsubmit = function(){
+        $scope.ferror=false;
+        console.log($scope.record);
+        var keys = Object.keys($scope.record[0]);
+        var keysLength =  keys.length;
+        var index = 0;
+        console.log(keys);
+        console.log(keysLength);
+        $scope.record.forEach(function(e){
+            keys.forEach(function(x){
+                console.log("--"+e[x]);
+                if(e[x]==''){
+                    $scope.ferror=true;
+                }
+            })
+        })
+    }
+    $scope.fdelete = function(){
+        if($scope.record.length>1){
+            $scope.record.pop();
+        }
+    }
+    $scope.fadd = function(){
+	        $scope.record.push($scope.emptyRecord)
+			$scope.record[$scope.length].itypeslected = $scope.worktypeSelected;
+        $scope.length++;
+
+    }
+});
+</script>
+
+</body>
+</html>
